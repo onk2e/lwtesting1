@@ -1,0 +1,36 @@
+name: Build and scan Docker Image
+on: [push]
+# Env variable
+env:
+  DOCKER_USER: mario.quarta@onku.be
+  DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+  REPO_NAME: cicdtest
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Get current date # get the date of the build
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y-%m-%d-%H-%M-%S')"
+          
+    - name: Build the Docker image
+      run: docker build . --file dummy-vuln-app-master/Dockerfile --tag $DOCKER_USER/$REPO_NAME:${{ steps.date.outputs.date }} # Bad image
+
+    - uses: lacework/lw-scanner-action@v1.0.0
+      name: Scan container image for vulnerabitilies using Lacework
+      with:
+        LW_ACCOUNT_NAME: ${{ secrets.LW_ACCOUNT_NAME }} 
+        LW_ACCESS_TOKEN: ${{ secrets.LW_ACCESS_TOKEN }}
+        IMAGE_NAME: YourImageName
+        IMAGE_TAG: YourImageTag    
+           
+    - name: docker login
+      run: | # log into docker hub account
+        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+        
+    - name: Docker Push
+      run: docker push $DOCKER_USER/$REPO_NAME:${{ steps.date.outputs.date }}
+

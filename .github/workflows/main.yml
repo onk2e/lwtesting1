@@ -2,7 +2,7 @@ name: Build and scan Docker Image
 on: [push]
 # Env variable
 env:
-  DOCKER_USER: mario.quarta@onku.be
+  DOCKER_USER: onk2e
   DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
   REPO_NAME: cicdtest
   

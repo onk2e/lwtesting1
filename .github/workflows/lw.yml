@@ -38,8 +38,7 @@ jobs:
       with:
         LW_ACCOUNT_NAME: ${{ secrets.LW_ACCOUNT_NAME }} 
         LW_ACCESS_TOKEN: ${{ secrets.LW_ACCESS_TOKEN }}
-        #IMAGE_NAME: onk2e/cicdtest
-        IMAGE_NAME: ${{ env.REGISTRY_USER }}/${{ env.IMAGE_NAME }}
+        IMAGE_NAME: onk2e/cicdtest
         IMAGE_TAG: lw-${{ steps.date.outputs.date }}
 
     - name: docker login

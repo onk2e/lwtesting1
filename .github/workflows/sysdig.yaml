@@ -6,8 +6,7 @@ env:
     IMAGE_NAME: "cicdtest"
     DOCKERFILE_CONTEXT: "dummy-vuln-app-master/"
   
-name: Container build, scan and push
-
+name: Sysdig scan
 on: [push, pull_request]
 
 jobs:
@@ -56,7 +55,7 @@ jobs:
       run: |
         ${GITHUB_WORKSPACE}/cache/sysdig-cli-scanner \
           --apiurl ${SYSDIG_SECURE_ENDPOINT} \
-          docker://${REGISTRY_HOST}/${ REGISTRY_USER }/${IMAGE_NAME}:sysdig-${{ steps.date.outputs.date }} \
+          docker://${REGISTRY_HOST}/${REGISTRY_USER}/${IMAGE_NAME}:sysdig-${{ steps.date.outputs.date }} \
           --console-log \
           --dbpath=${GITHUB_WORKSPACE}/cache/db/ \
           --cachepath=${GITHUB_WORKSPACE}/cache/scanner-cache/
